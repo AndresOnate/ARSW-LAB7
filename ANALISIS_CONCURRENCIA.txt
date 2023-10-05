@@ -1,0 +1,9 @@
+¿Qué condiciones de carrera se podrían presentar?
+
+1. Agregar un nuevo plano puede generar una condición de carrera, pues la consulta y posterior agregación  no se realizan de forma atómica.
+
+2. Realizar operaciones de actualización sobre un plano específico, varios usuarios pueden consultar un plano y tratar de modificar sus características.
+
+¿Cuales son las respectivas regiones críticas?
+La región crítica se encuentra en la colección de planos (ConcurrentHashMap<Tuple<String,String>,Blueprint>) presente en las implementaciones del servicio de persistencia, InMemoryBlueprintPersistence. En esta colección se registran todos los planos, por lo cual es usada por las distintas operaciones como registrar, actualizar y consultar.
+Se cambia la colección actual por una de tipo atomico (ConcurrentHashMap).
