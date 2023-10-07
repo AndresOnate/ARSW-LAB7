@@ -31,11 +31,18 @@
                         <tbody></tbody>
                     </table>
                     <h5 id="total-points">Total user points:</h5>
+                    <button type="button" class="btn btn-warning">Create New Blueprint</button>
                 </div>
                 <!-- Columna para el canvas -->
                 <div class="col">
                     <h5 id="blueprint-name">Blueprint Name</h5>
-                    <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;"></canvas>
+                    <div id="canvas-container" style="display: flex; flex-direction: column; align-items: center;">
+                        <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;"></canvas>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-success" onclick="app.saveOrUpdateBlueprint()">Save/Update</button>
+                            <button type="button" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

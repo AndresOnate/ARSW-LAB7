@@ -23,6 +23,18 @@ apiclient=(function(){
                     callback(data);
                 },
             });
-		}
+		},
+
+        updateBlueprint: function (authname, bpname, blueprintData, callback) {
+            $.ajax({
+                url: apiBaseUrl + "/blueprints/" + authname + "/" + bpname,
+                method: "PUT",
+                data: JSON.stringify(blueprintData),
+                contentType: "application/json",
+                success: function (data) {
+                    callback(data);
+                },
+            });
+        }
 	}
 })();
