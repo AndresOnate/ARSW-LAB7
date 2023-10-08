@@ -31,7 +31,10 @@
                         <tbody></tbody>
                     </table>
                     <h5 id="total-points">Total user points:</h5>
-                    <button type="button" class="btn btn-warning">Create New Blueprint</button>
+                    <button type="button" class="btn btn-warning" onClick="app.createNewBlueprint()">Create New Blueprint</button>
+                    <h5 id="title-newData"></h5>
+                    <div id="blueprint-name-display"></div>
+                    <div id="blueprint-info"></div>
                 </div>
                 <!-- Columna para el canvas -->
                 <div class="col">
@@ -40,7 +43,7 @@
                         <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;"></canvas>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-success" onclick="app.saveOrUpdateBlueprint()">Save/Update</button>
-                            <button type="button" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-danger" onClick="app.deleteBlueprint()">Delete</button>
                         </div>
                     </div>
                 </div>

@@ -87,4 +87,15 @@ public class BlueprintAPIController {
         return new ResponseEntity<>("Error",HttpStatus.BAD_REQUEST);
 
     }
+
+    @DeleteMapping(path = "/{author}/{name}")
+    public ResponseEntity<?> DeleteBlueprint(@PathVariable ("author") String author, @PathVariable ("name") String name){
+        try {
+            bps.deleteBluePrintByAuthorAndName(author, name);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.FORBIDDEN);
+        }
+    }
 }

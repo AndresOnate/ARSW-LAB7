@@ -50,6 +50,38 @@ apiclient=(function(){
                     },
                 });
             });
-        }
+        },
+
+        createBlueprint: function (newBlueprint) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: apiBaseUrl + "/blueprints/",
+                    method: "POST",
+                    data: JSON.stringify(newBlueprint),
+                    contentType: "application/json",
+                    success: function () {
+                        resolve();
+                    },
+                    error: function (error) {
+                        reject(error);
+                    },
+                });
+            });
+        },
+
+        deleteBlueprint: function (authname, bpname) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: apiBaseUrl + "/blueprints/" + authname + "/" + bpname,
+                    method: "DELETE",
+                    success: function () {
+                        resolve();
+                    },
+                    error: function (error) {
+                        reject(error);
+                    },
+                });
+            });
+        }    
 	}
 })();
