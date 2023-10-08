@@ -14,6 +14,7 @@ var app = (function(){
     }
 
 	function updateBlueprintTable() {
+        $("#blueprint-table tbody").empty();
         blueprints.map(function (blueprint) {
             var newRow = "<tr><td>" + blueprint.name + "</td><td>" + blueprint.points.length  + "</td><td><button id=" + encodeURIComponent(blueprint.name) + " onclick='app.getBlueprintsByAuthorAndName(this)'>Open</button></td></tr>";
             $("#blueprint-table tbody").append(newRow);
@@ -77,7 +78,6 @@ var app = (function(){
     }
 
     function getBlueprintsByAuthorAndName(selectedBp) {
-        author = $("#author").val();
         blueprintName = selectedBp.id;
         apiFunction.getBlueprintsByNameAndAuthor(author, blueprintName)
         .then( function (blueprint) {
@@ -146,8 +146,7 @@ var app = (function(){
             .then(function (newBlueprints) {
                 blueprints = newBlueprints.map(function (blueprint) {
                     return { name: blueprint.name, points: blueprint.points };
-                });
-                $("#blueprint-table tbody").empty();
+                })
                 updateBlueprintTable();
                 alert("Plano actualizado con éxito");
             })
@@ -200,6 +199,10 @@ var app = (function(){
         }
     }
     function deleteBlueprint() {
+        if (blueprintName == "" || author == "" ) {
+            alert("Author or Blueprint not selected!");
+            return; 
+        }
         apiFunction.deleteBlueprint(author, blueprintName)
             .then(function () {
                 return apiFunction.getBlueprintsByAuthor(author);
