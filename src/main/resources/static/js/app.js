@@ -35,16 +35,21 @@ var app = (function(){
 	function getBlueprintsByAuthor() {
         clear();
         author = $("#author").val();
-        apiFunction.getBlueprintsByAuthor(author, function (data) {
-            if(data){
+        apiFunction.getBlueprintsByAuthor(author)
+        .then(function (data) {
+            if (data) {
                 blueprints = data.map(function (blueprint) {
                     return { name: blueprint.name, points: blueprint.points };
                 });
                 $("#author-content").text(author + "'s blueprints: ");
-                updateBlueprintTable(); 
-            }else{
+                updateBlueprintTable();
+            } else {
                 alert("El Autor no fue encontrado.");
             }
+        })
+        .catch(function (error) {
+            console.error("Error al obtener los planos por autor:", error);
+            alert("Error al obtener los planos por autor.");
         });
     }
 
@@ -64,7 +69,8 @@ var app = (function(){
     function getBlueprintsByAuthorAndName(selectedBp) {
         author = $("#author").val();
         blueprintName = selectedBp.id;
-        apiFunction.getBlueprintsByNameAndAuthor(author, blueprintName, function (blueprint) {
+        apiFunction.getBlueprintsByNameAndAuthor(author, blueprintName)
+        .then( function (blueprint) {
             if (blueprint) {
                 currentCanvasPoints = blueprint.points;
                 drawBlueprint();
@@ -72,7 +78,11 @@ var app = (function(){
             } else {
                 alert("El plano no fue encontrado.");
             }
-        });
+        })
+        .catch(function (error) {
+            console.error("Error al obtener los planos por autor y nombre:", error);
+            alert("Error al obtener los planos por autor.");
+        });   
     }
 
     function getOffset(obj) {
@@ -117,31 +127,28 @@ var app = (function(){
             var updatedBlueprint = {
                 author: author,
                 points: currentCanvasPoints,
-                name: blueprintName
+                name: decodeURIComponent(blueprintName)
             };
-            apiFunction.updateBlueprint(author, blueprintName, updatedBlueprint, function (response) {
-                alert("Blueprint updated successfully!");
-                apiFunction.getBlueprintsByAuthor(author, function (data) {
-                    if (data) {
-                        blueprints = data.map(function (blueprint) {
-                            return { name: blueprint.name, points: blueprint.points };
-                        });
-                        updateBlueprintTable();
-                    } else {
-                        alert("Error fetching blueprints.");
-                    }
+            apiFunction.updateBlueprint(author, blueprintName, updatedBlueprint)
+            .then(function () {
+                return apiFunction.getBlueprintsByAuthor(author);
+            })
+            .then(function (newBlueprints) {
+                blueprints = newBlueprints.map(function (blueprint) {
+                    return { name: blueprint.name, points: blueprint.points };
                 });
-                    // Calcula nuevamente los puntos totales del usuario
-                var totalPoints = blueprints.reduce(function (accumulator, blueprint) {
-                    return accumulator + blueprint.points.length;
-                }, 0);
-                $("#total-points").text("Total user points: " + totalPoints);
+                $("#blueprint-table tbody").empty();
+                updateBlueprintTable();
+            })
+            .catch(function (error) {
+                console.error("Error en la solicitud PUT:");
+                console.error("Status:", error.status);
+                console.error("Status Text:", error.statusText);
+                console.error("Response Text:", error.responseText);
+                alert("Error al actualizar el plano.");
             });
-        } else {
-            alert("No points to save/update.");
         }
     }
-    
 	return {
 	    getBlueprintsByAuthor: getBlueprintsByAuthor,
         getBlueprintsByAuthorAndName: getBlueprintsByAuthorAndName,
